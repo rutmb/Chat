@@ -202,25 +202,9 @@ struct InputView: View {
     @ViewBuilder
     var editingButtons: some View {
         HStack {
-            Button {
-                onAction(.cancelEdit)
-            } label: {
-                Image(systemName: "xmark")
-                    .foregroundStyle(.white)
-                    .fontWeight(.bold)
-                    .padding(5)
-                    .background(Circle().foregroundStyle(.red))
-            }
-
-            Button {
-                onAction(.saveEdit)
-            } label: {
-                Image(systemName: "checkmark")
-                    .foregroundStyle(.white)
-                    .fontWeight(.bold)
-                    .padding(5)
-                    .background(Circle().foregroundStyle(.green))
-            }
+            CancelButton(imageName: "xmark", onAction: onAction)
+            
+            CancelButton(imageName: "checkmark", onAction: onAction)
         }
     }
 
@@ -571,5 +555,33 @@ struct InputView: View {
                 }
                 dragStart = nil
             }
+    }
+}
+
+struct CancelButton: View {
+    var imageName: String
+    var onAction: (InputViewAction) -> Void
+
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            Button {
+                onAction(.cancelEdit)
+            } label: {
+                Image(systemName: imageName)
+                    .foregroundStyle(.white)
+                    .fontWeight(.bold)
+                    .padding(5)
+                    .background(Circle().foregroundStyle(.red))
+            }
+        } else {
+            Button {
+                onAction(.cancelEdit)
+            } label: {
+                Image(systemName: imageName)
+                    .foregroundStyle(.white)
+                    .padding(5)
+                    .background(Circle().foregroundStyle(.red))
+            }
+        }
     }
 }

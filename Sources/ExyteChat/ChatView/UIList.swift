@@ -503,20 +503,38 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
             tableViewCell.backgroundColor = UIColor(mainBackgroundColor)
 
             let row = sections[indexPath.section].rows[indexPath.row]
-            tableViewCell.contentConfiguration = UIHostingConfiguration {
-                ChatMessageView(viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type, avatarSize: avatarSize, tapAvatarClosure: tapAvatarClosure, messageUseMarkdown: messageUseMarkdown, isDisplayingMessageMenu: false, showMessageTimeView: showMessageTimeView, messageFont: messageFont)
-                    .transition(.scale)
-                    .background(MessageMenuPreferenceViewSetter(id: row.id))
-                    .rotationEffect(Angle(degrees: (type == .conversation ? 180 : 0)))
-                    .onTapGesture { }
-                    .applyIf(showMessageMenuOnLongPress) {
-                        $0.onLongPressGesture {
-                            self.viewModel.messageMenuRow = row
+
+            if #available(iOS 16.0, *) {
+                tableViewCell.contentConfiguration = UIHostingConfiguration {
+                    ChatMessageView(viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type, avatarSize: avatarSize, tapAvatarClosure: tapAvatarClosure, messageUseMarkdown: messageUseMarkdown, isDisplayingMessageMenu: false, showMessageTimeView: showMessageTimeView, messageFont: messageFont)
+                        .transition(.scale)
+                        .background(MessageMenuPreferenceViewSetter(id: row.id))
+                        .rotationEffect(Angle(degrees: (type == .conversation ? 180 : 0)))
+                        .onTapGesture { }
+                        .applyIf(showMessageMenuOnLongPress) {
+                            $0.onLongPressGesture {
+                                self.viewModel.messageMenuRow = row
+                            }
                         }
-                    }
+                }
+                .minSize(width: 0, height: 0)
+                .margins(.all, 0)
+            } else {
+                tableViewCell.contentConfiguration = BPHostingConfiguration {
+                    ChatMessageView(viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type, avatarSize: avatarSize, tapAvatarClosure: tapAvatarClosure, messageUseMarkdown: messageUseMarkdown, isDisplayingMessageMenu: false, showMessageTimeView: showMessageTimeView, messageFont: messageFont)
+                        .transition(.scale)
+                        .background(MessageMenuPreferenceViewSetter(id: row.id))
+                        .rotationEffect(Angle(degrees: (type == .conversation ? 180 : 0)))
+                        .onTapGesture { }
+                        .applyIf(showMessageMenuOnLongPress) {
+                            $0.onLongPressGesture {
+                                self.viewModel.messageMenuRow = row
+                            }
+                        }
+                }
+//                .minSize(width: 0, height: 0)
+//                .margins(.all, 0)
             }
-            .minSize(width: 0, height: 0)
-            .margins(.all, 0)
 
             return tableViewCell
         }

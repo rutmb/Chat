@@ -274,7 +274,7 @@ github "Exyte/Chat"
 
 ## Requirements
 
-* iOS 16+
+* iOS 15+
 * Xcode 14+
 
 ## Our other open source SwiftUI libraries
