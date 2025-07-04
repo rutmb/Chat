@@ -12,15 +12,25 @@ import enum FloatingButton.Alignment
 public protocol MessageMenuAction: Equatable, CaseIterable {
     func title() -> String
     func icon() -> Image
+
+    static func menuItems(for message: Message) -> [Self]
+}
+
+extension MessageMenuAction {
+    public static func menuItems(for message: Message) -> [Self] {
+        Self.allCases.map { $0 }
+    }
 }
 
 public enum DefaultMessageMenuAction: MessageMenuAction {
-
+    case copy
     case reply
     case edit(saveClosure: (String)->Void)
 
     public func title() -> String {
         switch self {
+        case .copy:
+            "Copy"
         case .reply:
             "Reply"
         case .edit:
@@ -30,26 +40,37 @@ public enum DefaultMessageMenuAction: MessageMenuAction {
 
     public func icon() -> Image {
         switch self {
+        case .copy:
+            Image(systemName: "doc.on.doc")
         case .reply:
-            Image(.reply)
+            Image(systemName: "arrowshape.turn.up.left")
         case .edit:
-            Image(.edit)
+            Image(systemName: "bubble.and.pencil")
         }
     }
 
-    public static func == (lhs: DefaultMessageMenuAction, rhs: DefaultMessageMenuAction) -> Bool {
-        if case .reply = lhs, case .reply = rhs {
+    nonisolated public static func == (lhs: DefaultMessageMenuAction, rhs: DefaultMessageMenuAction) -> Bool {
+        switch (lhs, rhs) {
+        case (.copy, .copy),
+             (.reply, .reply),
+             (.edit(_), .edit(_)):
             return true
+        default:
+            return false
         }
-        if case .edit(_) = lhs, case .edit(_) = rhs {
-            return true
-        }
-        return false
     }
 
-    public static var allCases: [DefaultMessageMenuAction] = [
-        .reply, .edit(saveClosure: {_ in})
+    public static let allCases: [DefaultMessageMenuAction] = [
+        .copy, .reply, .edit(saveClosure: {_ in})
     ]
+
+    static public func menuItems(for message: Message) -> [DefaultMessageMenuAction] {
+        if message.user.isCurrentUser {
+            return allCases
+        } else {
+            return [.copy, .reply]
+        }
+    }
 }
 
 struct MessageMenu<MainButton: View, ActionEnum: MessageMenuAction>: View {
@@ -58,6 +79,7 @@ struct MessageMenu<MainButton: View, ActionEnum: MessageMenuAction>: View {
 
     @Binding var isShowingMenu: Bool
     @Binding var menuButtonsSize: CGSize
+    var message: Message
     var alignment: Alignment
     var leadingPadding: CGFloat
     var trailingPadding: CGFloat
@@ -67,7 +89,7 @@ struct MessageMenu<MainButton: View, ActionEnum: MessageMenuAction>: View {
     var body: some View {
         FloatingButton(
             mainButtonView: mainButton().allowsHitTesting(false),
-            buttons: ActionEnum.allCases.map {
+            buttons: ActionEnum.menuItems(for: message).map {
                 menuButton(title: $0.title(), icon: $0.icon(), action: $0)
             },
             isOpen: $isShowingMenu
