@@ -100,6 +100,9 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     /// date section header builder
     var headerBuilder: ((Date)->AnyView)?
 
+    /// will display message
+    var onMessageDisplay: ((Message) -> ())?
+
     // MARK: - Customization
 
     var isListAboveInputView: Bool = true
@@ -278,7 +281,8 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
                showMessageTimeView: showMessageTimeView,
                messageFont: messageFont,
                sections: sections,
-               ids: ids
+               ids: ids,
+               onMessageDisplay: onMessageDisplay
         )
         .applyIf(!isScrollEnabled) {
             $0.frame(height: tableContentHeight)
@@ -575,6 +579,12 @@ public extension ChatView {
     func setAvailableInput(_ type: AvailableInputType) -> ChatView {
         var view = self
         view.availablelInput = type
+        return view
+    }
+
+    func onMessageDisplay(_ onMessageDisplay: @escaping (Message) -> ()) -> ChatView {
+        var view = self
+        view.onMessageDisplay = onMessageDisplay
         return view
     }
 }
