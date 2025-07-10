@@ -27,7 +27,7 @@ struct MessageStatusView: View {
             case .read:
                 theme.images.message.doubleCheckmarks
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .foregroundColor(theme.colors.myMessage)
             case .error:
                 Button {
