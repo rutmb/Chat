@@ -17,15 +17,17 @@ struct MessageStatusView: View {
             case .sending:
                 theme.images.message.sending
                     .resizable()
-                    .rotationEffect(.degrees(90))
+                    .scaledToFit()
                     .foregroundColor(theme.colors.grayStatus)
             case .sent:
-                theme.images.message.checkmarks
+                theme.images.message.singleCheckmark
                     .resizable()
+                    .scaledToFit()
                     .foregroundColor(theme.colors.grayStatus)
             case .read:
-                theme.images.message.checkmarks
+                theme.images.message.doubleCheckmarks
                     .resizable()
+                    .scaledToFit()
                     .foregroundColor(theme.colors.myMessage)
             case .error:
                 Button {

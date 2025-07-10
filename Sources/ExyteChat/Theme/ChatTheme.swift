@@ -145,15 +145,16 @@ public struct ChatTheme {
         }
 
         public struct Message {
-            public var attachedDocument: Image
-            public var checkmarks: Image
-            public var error: Image
-            public var muteVideo: Image
-            public var pauseAudio: Image
-            public var pauseVideo: Image
-            public var playAudio: Image
-            public var playVideo: Image
-            public var sending: Image
+            public let attachedDocument: Image
+            public let singleCheckmark: Image
+            public let doubleCheckmarks: Image
+            public let error: Image
+            public let muteVideo: Image
+            public let pauseAudio: Image
+            public let pauseVideo: Image
+            public let playAudio: Image
+            public let playVideo: Image
+            public let sending: Image
         }
 
         public struct MessageMenu {
@@ -214,7 +215,8 @@ public struct ChatTheme {
             chevronRight: Image? = nil,
             cross: Image? = nil,
             attachedDocument: Image? = nil,
-            checkmarks: Image? = nil,
+            singleCheckmark: Image? = nil,
+            doubleCheckmarks: Image? = nil,
             error: Image? = nil,
             muteVideo: Image? = nil,
             pauseAudio: Image? = nil,
@@ -277,7 +279,8 @@ public struct ChatTheme {
 
             self.message = Message(
                 attachedDocument: attachedDocument ?? Image("attachedDocument", bundle: .current),
-                checkmarks: checkmarks ?? Image("checkmarks", bundle: .current),
+                singleCheckmark: singleCheckmark ?? Image("singleCheckmark", bundle: .current),
+                doubleCheckmarks: doubleCheckmarks ?? Image("doubleCheckmarks", bundle: .current),
                 error: error ?? Image("error", bundle: .current),
                 muteVideo: muteVideo ?? Image("muteVideo", bundle: .current),
                 pauseAudio: pauseAudio ?? Image("pauseAudio", bundle: .current),
