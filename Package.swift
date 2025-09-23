@@ -16,7 +16,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/siteline/swiftui-introspect",
-            from: "1.1.3"
+            from: "26.0.0"
         ),
         .package(
             url: "https://github.com/exyte/MediaPicker.git",
